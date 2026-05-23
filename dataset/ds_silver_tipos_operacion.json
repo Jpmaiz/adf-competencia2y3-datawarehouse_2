@@ -1,0 +1,15 @@
+{
+	"name": "ds_silver_tipos_operacion",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_dw_ffaa",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "silver"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
