@@ -1,0 +1,15 @@
+{
+	"name": "ds_oltp_especialidades",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_oltp_ffaa",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "oltp"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}

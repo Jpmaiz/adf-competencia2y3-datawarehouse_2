@@ -1,0 +1,15 @@
+{
+	"name": "ds_oltp_tipos_movimiento",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_oltp_ffaa",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "oltp"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
