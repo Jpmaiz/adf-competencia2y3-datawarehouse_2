@@ -1,0 +1,138 @@
+{
+	"name": "df_oltp_to_silver_operaciones",
+	"properties": {
+		"folder": {
+			"name": "silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_oltp_operaciones",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_silver_operaciones",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          id_operacion as integer,",
+				"          id_tipo as integer,",
+				"          id_unidad_resp as integer,",
+				"          id_zona as integer,",
+				"          nombre_operacion as string,",
+				"          fecha_inicio as string,",
+				"          fecha_fin as string,",
+				"          efectivos_desplegados as string,",
+				"          vehiculos_utilizados as string,",
+				"          duracion_dias as string,",
+				"          costo_operacion as string,",
+				"          resultado as string,",
+				"          detenidos as string,",
+				"          area_km2 as string,",
+				"          incidentes as string,",
+				"          observaciones as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 derive(efectivos_desplegados = case(\r",
+				"    lower(trim(efectivos_desplegados)) == 'cien' || lower(trim(efectivos_desplegados)) == 'ciento', 100,\r",
+				"    lower(trim(efectivos_desplegados)) == 'doscientos', 200,\r",
+				"    lower(trim(efectivos_desplegados)) == 'trescientos', 300,\r",
+				"    lower(trim(efectivos_desplegados)) == 'cuatrocientos', 400,\r",
+				"    lower(trim(efectivos_desplegados)) == 'quinientos', 500,\r",
+				"    lower(trim(efectivos_desplegados)) == 'cincuenta', 50,\r",
+				"    iifNull(toInteger(regexReplace(efectivos_desplegados, '[^0-9]', '')), 0)\r",
+				"),",
+				"          vehiculos_utilizados = case(\r",
+				"    lower(trim(vehiculos_utilizados)) == 'dieciséis', 16,\r",
+				"    lower(trim(vehiculos_utilizados)) == 'veinte', 20,\r",
+				"    lower(trim(vehiculos_utilizados)) == 'veinticinco', 25,\r",
+				"    iifNull(toInteger(regexReplace(vehiculos_utilizados, '[^0-9]', '')), 0)\r",
+				"),",
+				"          duracion_dias = case(     lower(trim(duracion_dias)) == 'siete', 7,     lower(trim(duracion_dias)) == 'ocho', 8,     lower(trim(duracion_dias)) == 'trece', 13,     lower(trim(duracion_dias)) == 'dieciocho', 18,     lower(trim(duracion_dias)) == 'veinte', 20,     lower(trim(duracion_dias)) == 'veinticinco', 25,     lower(trim(duracion_dias)) == 'cinco', 5,     iifNull(toInteger(regexReplace(duracion_dias, '[^0-9]', '')), 0) ),",
+				"          costo_operacion = iifNull(toDecimal(regexReplace(regexReplace(regexReplace(costo_operacion, '[^0-9.,]', ''), ',', ''), '\\\\.(?=[0-9]{3})', ''), 15, 2), 0),",
+				"          detenidos = case(\r",
+				"    lower(trim(detenidos)) == 'ninguno' || lower(trim(detenidos)) == 'sin detenidos' || lower(trim(detenidos)) == 'cero' || lower(trim(detenidos)) == 'n/a' || trim(detenidos) == '-', 0,\r",
+				"    lower(trim(detenidos)) == 'uno', 1,\r",
+				"    lower(trim(detenidos)) == 'dos', 2,\r",
+				"    lower(trim(detenidos)) == 'tres', 3,\r",
+				"    lower(trim(detenidos)) == 'diez', 10,\r",
+				"    lower(trim(detenidos)) == 'veinte', 20,\r",
+				"    lower(trim(detenidos)) == 'veinticuatro', 24,\r",
+				"    iifNull(toInteger(regexReplace(detenidos, '[^0-9]', '')), 0)\r",
+				"),",
+				"          incidentes = case(     lower(trim(incidentes)) == 'ninguno' || lower(trim(incidentes)) == 'sin incidentes' || lower(trim(incidentes)) == 'cero' || lower(trim(incidentes)) == 'n/a' || trim(incidentes) == '-' || lower(trim(incidentes)) == '0 incidentes', 0,     lower(trim(incidentes)) == 'uno', 1,     lower(trim(incidentes)) == 'dos', 2,     lower(trim(incidentes)) == 'tres', 3,     lower(trim(incidentes)) == 'cinco', 5,     lower(trim(incidentes)) == 'ocho', 8,     lower(trim(incidentes)) == 'diez', 10,     iifNull(toInteger(regexReplace(incidentes, '[^0-9]', '')), 0) ),",
+				"          resultado = case(     lower(trim(resultado)) == 'exitosa' || lower(trim(resultado)) == 'exitoso' || lower(trim(resultado)) == 'favorable' || lower(trim(resultado)) == 'bueno' || lower(trim(resultado)) == 'objetivo cumplido' || lower(trim(resultado)) == 'completada' || lower(trim(resultado)) == 'logrado' || lower(trim(resultado)) == 'concluida' || lower(trim(resultado)) == 'finalizada' || lower(trim(resultado)) == 'sí, exitosa', 'EXITOSA',     lower(trim(resultado)) == 'fallida' || lower(trim(resultado)) == 'no logrado' || lower(trim(resultado)) == 'sin resultados' || lower(trim(resultado)) == 'sin resultados concretos' || lower(trim(resultado)) == 'negativo', 'FALLIDA',     lower(trim(resultado)) == 'parcial' || lower(trim(resultado)) == 'parcialmente exitoso' || lower(trim(resultado)) == 'parcialmente logrado' || lower(trim(resultado)) == 'aceptable' || lower(trim(resultado)) == 'satisfactorio' || lower(trim(resultado)) == 'regular', 'PARCIAL',     lower(trim(resultado)) == 'en proceso' || lower(trim(resultado)) == 'en curso' || lower(trim(resultado)) == 'por evaluar' || lower(trim(resultado)) == 'incompleta', 'EN PROCESO',     lower(trim(resultado)) == 's/n' || lower(trim(resultado)) == 'sin dato' || lower(trim(resultado)) == 'no reportado' || isNull(trim(resultado)) || trim(resultado) == '' || trim(resultado) == '-', 'SIN DATO',     upper(trim(resultado)) ),",
+				"          nombre_operacion = initCap(\r",
+				"    trim(\r",
+				"        regexReplace(\r",
+				"            replace(\r",
+				"                replace(\r",
+				"                    replace(\r",
+				"                        replace(\r",
+				"                            replace(\r",
+				"                                replace(\r",
+				"                                    replace(\r",
+				"                                        toString(byName('nombre_operacion')),\r",
+				"                                        'Operación',\r",
+				"                                        ''\r",
+				"                                    ),\r",
+				"                                    'Op.',\r",
+				"                                    ''\r",
+				"                                ),\r",
+				"                                'Op',\r",
+				"                                ''\r",
+				"                            ),\r",
+				"                            '#',\r",
+				"                            ''\r",
+				"                        ),\r",
+				"                        '\"',\r",
+				"                        ''\r",
+				"                    ),\r",
+				"                    '/',\r",
+				"                    ' '\r",
+				"                ),\r",
+				"                '-',\r",
+				"                ' '\r",
+				"            ),\r",
+				"            '\\u0027',\r",
+				"            ''\r",
+				"        )\r",
+				"    )\r",
+				"),",
+				"          area_km2 = iifNull(toDecimal(regexReplace(regexReplace(lower(area_km2), 'km[2]?', ''), '[^0-9.]', ''), 12, 2), 0),",
+				"          observaciones = case(     isNull(trim(observaciones)) || length(trim(observaciones)) == 0 || upper(trim(observaciones)) == 'N/A' || upper(trim(observaciones)) == 'S/N', 'Sin observaciones',     initCap(trim(regexReplace(regexReplace(observaciones, '[\\r\\n]+', ' '), ' — ', ' - '))) ),",
+				"          fecha_inicio = trim(fecha_inicio),",
+				"          fecha_fin = trim(fecha_fin)) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}

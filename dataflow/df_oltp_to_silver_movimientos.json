@@ -1,0 +1,93 @@
+{
+	"name": "df_oltp_to_silver_movimientos",
+	"properties": {
+		"folder": {
+			"name": "silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_oltp_movimientos_personal",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_silver_movimientos_personal",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          id_movimiento as integer,",
+				"          id_efectivo as integer,",
+				"          id_unidad_destino as integer,",
+				"          id_rango as integer,",
+				"          id_tipo as integer,",
+				"          fecha_movimiento as string,",
+				"          antiguedad_anios as string,",
+				"          salario_mensual as string,",
+				"          observaciones as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 derive(antiguedad_anios = case(\r",
+				"    lower(trim(antiguedad_anios)) == 'cero' || lower(trim(antiguedad_anios)) == 'cero años' || trim(antiguedad_anios) == '0 a.' || trim(antiguedad_anios) == '0,0 años' || trim(antiguedad_anios) == '0 años' || trim(antiguedad_anios) == 'aprox. 0', 0,\r",
+				"    lower(trim(antiguedad_anios)) == 'uno' || lower(trim(antiguedad_anios)) == '1 año', 1,\r",
+				"    lower(trim(antiguedad_anios)) == 'dos' || lower(trim(antiguedad_anios)) == 'dos años', 2,\r",
+				"    lower(trim(antiguedad_anios)) == 'tres' || lower(trim(antiguedad_anios)) == 'tres años', 3,\r",
+				"    lower(trim(antiguedad_anios)) == 'cuatro' || lower(trim(antiguedad_anios)) == 'cuatro años', 4,\r",
+				"    lower(trim(antiguedad_anios)) == 'cinco' || lower(trim(antiguedad_anios)) == 'cinco años', 5,\r",
+				"    lower(trim(antiguedad_anios)) == 'seis' || lower(trim(antiguedad_anios)) == 'seis años', 6,\r",
+				"    lower(trim(antiguedad_anios)) == 'siete' || lower(trim(antiguedad_anios)) == 'siete años', 7,\r",
+				"    lower(trim(antiguedad_anios)) == 'ocho' || lower(trim(antiguedad_anios)) == 'ocho años', 8,\r",
+				"    lower(trim(antiguedad_anios)) == 'nueve' || lower(trim(antiguedad_anios)) == 'nueve años', 9,\r",
+				"    lower(trim(antiguedad_anios)) == 'diez' || lower(trim(antiguedad_anios)) == 'diez años', 10,\r",
+				"    lower(trim(antiguedad_anios)) == 'once' || lower(trim(antiguedad_anios)) == 'once años', 11,\r",
+				"    lower(trim(antiguedad_anios)) == 'doce' || lower(trim(antiguedad_anios)) == 'doce años', 12,\r",
+				"    lower(trim(antiguedad_anios)) == 'trece' || lower(trim(antiguedad_anios)) == 'trece años', 13,\r",
+				"    lower(trim(antiguedad_anios)) == 'catorce' || lower(trim(antiguedad_anios)) == 'catorce años', 14,\r",
+				"    lower(trim(antiguedad_anios)) == 'quince' || lower(trim(antiguedad_anios)) == 'quince años', 15,\r",
+				"    lower(trim(antiguedad_anios)) == 'dieciséis' || lower(trim(antiguedad_anios)) == 'dieciséis años', 16,\r",
+				"    lower(trim(antiguedad_anios)) == 'diecisiete' || lower(trim(antiguedad_anios)) == 'diecisiete años', 17,\r",
+				"    lower(trim(antiguedad_anios)) == 'dieciocho' || lower(trim(antiguedad_anios)) == 'dieciocho años', 18,\r",
+				"    lower(trim(antiguedad_anios)) == 'diecinueve' || lower(trim(antiguedad_anios)) == 'diecinueve años', 19,\r",
+				"    lower(trim(antiguedad_anios)) == 'veinte' || lower(trim(antiguedad_anios)) == 'veinte años', 20,\r",
+				"    lower(trim(antiguedad_anios)) == 'veintiuno' || lower(trim(antiguedad_anios)) == 'veintiuno años', 21,\r",
+				"    lower(trim(antiguedad_anios)) == 'veintidós' || lower(trim(antiguedad_anios)) == 'veintidós años', 22,\r",
+				"    lower(trim(antiguedad_anios)) == 'veintitrés' || lower(trim(antiguedad_anios)) == 'veintitrés años', 23,\r",
+				"    lower(trim(antiguedad_anios)) == 'veinticuatro' || lower(trim(antiguedad_anios)) == 'veinticuatro años', 24,\r",
+				"    lower(trim(antiguedad_anios)) == 'veinticinco' || lower(trim(antiguedad_anios)) == 'veinticinco años', 25,\r",
+				"    iifNull(toInteger(regexReplace(antiguedad_anios, '[^0-9]', '')), 0)\r",
+				"),",
+				"          salario_mensual = iifNull(toDecimal(regexReplace(regexReplace(salario_mensual, '[^0-9.]', ''), ',', ''), 12, 2), 0),",
+				"          observaciones = case(     isNull(trim(observaciones)) || length(trim(observaciones)) == 0 || upper(trim(observaciones)) == 'N/A' || upper(trim(observaciones)) == 'S/N' || upper(trim(observaciones)) == 'SIN OBS.', 'Sin observaciones',     initCap(trim(regexReplace(regexReplace(regexReplace(observaciones, '[\\r\\n]+', ' '), 'Ref: ', ''), ' — ', ' - '))) )) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}
