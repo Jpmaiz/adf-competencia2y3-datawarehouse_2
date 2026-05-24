@@ -1,0 +1,85 @@
+{
+	"name": "df_oltp_to_silver_efectivos",
+	"properties": {
+		"folder": {
+			"name": "silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_oltp_efectivos",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_silver_efectivos",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          id_efectivo as integer,",
+				"          id_especialidad as integer,",
+				"          id_unidad_actual as integer,",
+				"          id_rango_actual as integer,",
+				"          nombre as string,",
+				"          ci as string,",
+				"          fecha_nacimiento as string,",
+				"          genero as string,",
+				"          departamento_origen as string,",
+				"          fecha_ingreso as string,",
+				"          estado as string,",
+				"          salario_mensual as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 derive(nombre = trim(regexReplace(upper(nombre), '[#\\\\\\\\t]', ' ')),",
+				"          genero = case(     upper(trim(genero)) == 'M' || upper(trim(genero)) == 'MASCULINO' || upper(trim(genero)) == 'HOMBRE' || upper(trim(genero)) == 'MASC.', 'M',     upper(trim(genero)) == 'F' || upper(trim(genero)) == 'FEMENINO' || upper(trim(genero)) == 'FEM', 'F',     'N/A' ),",
+				"          estado = case(     upper(trim(estado)) == 'ACTIVO' || upper(trim(estado)) == 'ACTIVO.' || upper(trim(estado)) == 'ACT' || upper(trim(estado)) == 'ACTV' || upper(trim(estado)) == 'A' || upper(trim(estado)) == 'EN ACTIVIDAD', 'ACTIVO',     upper(trim(estado)) == 'BAJA' || upper(trim(estado)) == 'DADO DE BAJA', 'BAJA',     upper(trim(estado)) == 'R' || upper(trim(estado)) == 'RSV' || upper(trim(estado)) == 'RESERVA', 'RESERVA',     'DESCONOCIDO' ),",
+				"          salario_mensual = iifNull(toDecimal(regexReplace(regexReplace(salario_mensual, '[^0-9.]', ''), ',', ''), 12, 2), 0),",
+				"          departamento_origen = case(\r",
+				"    upper(trim(departamento_origen)) == 'LA PAZ' || upper(trim(departamento_origen)) == 'L.P.' || upper(trim(departamento_origen)) == 'LP', 'LA PAZ',\r",
+				"    upper(trim(departamento_origen)) == 'COCHABAMBA' || upper(trim(departamento_origen)) == 'CBBA' || upper(trim(departamento_origen)) == 'CBBA.', 'COCHABAMBA',\r",
+				"    upper(trim(departamento_origen)) == 'SANTA CRUZ' || upper(trim(departamento_origen)) == 'SCZ', 'SANTA CRUZ',\r",
+				"    upper(trim(departamento_origen)) == 'ORURO' || upper(trim(departamento_origen)) == 'OR', 'ORURO',\r",
+				"    upper(trim(departamento_origen)) == 'TARIJA' || upper(trim(departamento_origen)) == 'TJ', 'TARIJA',\r",
+				"    upper(trim(departamento_origen)) == 'POTOSI' || upper(trim(departamento_origen)) == 'PT', 'POTOSI',\r",
+				"    upper(trim(departamento_origen)) == 'BENI' || upper(trim(departamento_origen)) == 'BE', 'BENI',\r",
+				"    upper(trim(departamento_origen)) == 'PANDO' || upper(trim(departamento_origen)) == 'PD', 'PANDO',\r",
+				"    upper(trim(departamento_origen)) == 'CHUQUISACA' || upper(trim(departamento_origen)) == 'CH', 'CHUQUISACA',\r",
+				"    upper(trim(departamento_origen))\r",
+				"),",
+				"          ci = case(\r",
+				"    upper(trim(ci)) == 'SIN DATO' || upper(trim(ci)) == 'N/D', 'N/A',\r",
+				"    trim(regexReplace(regexReplace(regexReplace(regexReplace(upper(ci), 'C[.]?I[.]?\\\\s*', ''), '[:\\\\s]*([A-Z]{2,3}[.]?)$', ''), '[.\\\\-\\\\s:]', ''), '^[:\\\\s]+', ''))\r",
+				")) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}
