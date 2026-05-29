@@ -1,0 +1,57 @@
+{
+	"name": "df_silver_to_gold_dim_efectivo",
+	"properties": {
+		"folder": {
+			"name": "gold"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_silver_efectivos",
+						"type": "DatasetReference"
+					},
+					"name": "sourceEfectivos"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "columnasCalculadas"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          id_efectivo as integer,",
+				"          id_especialidad as integer,",
+				"          id_unidad_actual as integer,",
+				"          id_rango_actual as integer,",
+				"          nombre as string,",
+				"          ci as string,",
+				"          fecha_nacimiento as string,",
+				"          genero as string,",
+				"          departamento_origen as string,",
+				"          fecha_ingreso as string,",
+				"          estado as string,",
+				"          salario_mensual as decimal(12,2)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> sourceEfectivos",
+				"sourceEfectivos derive(anio_nacimiento = iif(toInteger(left(fecha_nacimiento, 4)) >= 1900, \r",
+				"    toInteger(left(fecha_nacimiento, 4)), \r",
+				"    toInteger(right(fecha_nacimiento, 4))),",
+				"          grupo_edad = case(\r",
+				"    2026 - iif(toInteger(left(fecha_nacimiento, 4)) >= 1900, toInteger(left(fecha_nacimiento, 4)), toInteger(right(fecha_nacimiento, 4))) < 20, 'Menor 20 años',\r",
+				"    2026 - iif(toInteger(left(fecha_nacimiento, 4)) >= 1900, toInteger(left(fecha_nacimiento, 4)), toInteger(right(fecha_nacimiento, 4))) <= 30, '20-30 años',\r",
+				"    2026 - iif(toInteger(left(fecha_nacimiento, 4)) >= 1900, toInteger(left(fecha_nacimiento, 4)), toInteger(right(fecha_nacimiento, 4))) <= 40, '31-40 años',\r",
+				"    2026 - iif(toInteger(left(fecha_nacimiento, 4)) >= 1900, toInteger(left(fecha_nacimiento, 4)), toInteger(right(fecha_nacimiento, 4))) <= 50, '41-50 años',\r",
+				"    'Mayor 50 años'\r",
+				"),",
+				"          anios_servicio = 2026 - iif(toInteger(left(fecha_ingreso, 4)) >= 1900, toInteger(left(fecha_ingreso, 4)), toInteger(right(fecha_ingreso, 4)))) ~> columnasCalculadas"
+			]
+		}
+	}
+}
