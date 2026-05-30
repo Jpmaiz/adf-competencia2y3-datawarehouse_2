@@ -15,7 +15,15 @@
 					"name": "sourceEfectivos"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_gold_dim_efectivo",
+						"type": "DatasetReference"
+					},
+					"name": "sinkDimEfectivo"
+				}
+			],
 			"transformations": [
 				{
 					"name": "columnasCalculadas"
@@ -50,7 +58,60 @@
 				"    2026 - iif(toInteger(left(fecha_nacimiento, 4)) >= 1900, toInteger(left(fecha_nacimiento, 4)), toInteger(right(fecha_nacimiento, 4))) <= 50, '41-50 años',\r",
 				"    'Mayor 50 años'\r",
 				"),",
-				"          anios_servicio = 2026 - iif(toInteger(left(fecha_ingreso, 4)) >= 1900, toInteger(left(fecha_ingreso, 4)), toInteger(right(fecha_ingreso, 4)))) ~> columnasCalculadas"
+				"          anios_servicio = 2026 - iif(toInteger(left(fecha_ingreso, 4)) >= 1900, toInteger(left(fecha_ingreso, 4)), toInteger(right(fecha_ingreso, 4))),",
+				"          fecha_nacimiento = iif(\r",
+				"    instr(fecha_nacimiento, '/') == 0 && instr(fecha_nacimiento, '-') == 0,\r",
+				"    toDate(fecha_nacimiento, 'yyyyMMdd'),\r",
+				"    iif(\r",
+				"        toInteger(left(fecha_nacimiento, 4)) >= 1900,\r",
+				"        toDate(fecha_nacimiento, 'yyyy/MM/dd'),\r",
+				"        iif(\r",
+				"            instr(fecha_nacimiento, '/') > 0,\r",
+				"            toDate(fecha_nacimiento, 'dd/MM/yyyy'),\r",
+				"            iif(\r",
+				"                toInteger(left(fecha_nacimiento, 2)) > 12,\r",
+				"                toDate(fecha_nacimiento, 'dd-MM-yyyy'),\r",
+				"                iif(\r",
+				"                    toInteger(substring(fecha_nacimiento, 4, 2)) > 12,\r",
+				"                    toDate(fecha_nacimiento, 'MM-dd-yyyy'),\r",
+				"                    toDate(fecha_nacimiento, 'dd-MM-yyyy')\r",
+				"                )\r",
+				"            )\r",
+				"        )\r",
+				"    )\r",
+				"),",
+				"          fecha_ingreso = iif(\r",
+				"    instr(fecha_ingreso, '/') == 0 && instr(fecha_ingreso, '-') == 0,\r",
+				"    toDate(fecha_ingreso, 'yyyyMMdd'),\r",
+				"    iif(\r",
+				"        toInteger(left(fecha_ingreso, 4)) >= 1900,\r",
+				"        toDate(fecha_ingreso, 'yyyy/MM/dd'),\r",
+				"        iif(\r",
+				"            instr(fecha_ingreso, '/') > 0,\r",
+				"            toDate(fecha_ingreso, 'dd/MM/yyyy'),\r",
+				"            iif(\r",
+				"                toInteger(left(fecha_ingreso, 2)) > 12,\r",
+				"                toDate(fecha_ingreso, 'dd-MM-yyyy'),\r",
+				"                iif(\r",
+				"                    toInteger(substring(fecha_ingreso, 4, 2)) > 12,\r",
+				"                    toDate(fecha_ingreso, 'MM-dd-yyyy'),\r",
+				"                    toDate(fecha_ingreso, 'dd-MM-yyyy')\r",
+				"                )\r",
+				"            )\r",
+				"        )\r",
+				"    )\r",
+				")) ~> columnasCalculadas",
+				"columnasCalculadas sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkDimEfectivo"
 			]
 		}
 	}
