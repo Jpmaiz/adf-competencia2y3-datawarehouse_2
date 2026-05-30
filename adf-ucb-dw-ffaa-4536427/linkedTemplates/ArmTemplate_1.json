@@ -1,0 +1,973 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Nombre de instancia de Data Factory",
+			"defaultValue": "adf-ucb-dw-ffaa-4536427"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_oltp_zonas')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_oltp_ffaa",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "oltp"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id_zona",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "nombre",
+						"type": "nvarchar"
+					},
+					{
+						"name": "departamento",
+						"type": "nvarchar"
+					},
+					{
+						"name": "frontera_con",
+						"type": "nvarchar"
+					},
+					{
+						"name": "tipo_terreno",
+						"type": "varchar"
+					},
+					{
+						"name": "altitud_msnm",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "nivel_riesgo",
+						"type": "varchar"
+					},
+					{
+						"name": "acceso_carretero",
+						"type": "bit"
+					}
+				],
+				"typeProperties": {
+					"schema": "oltp",
+					"table": "tbl_zonas"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_silver_efectivos')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_dw_ffaa",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "efectivos"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_silver_especialidades')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_dw_ffaa",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "especialidades"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_silver_estructura_org')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_dw_ffaa",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "estructura_organizacional"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_silver_movimientos_personal')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_dw_ffaa",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "movimientos_personal"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_silver_operaciones')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_dw_ffaa",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "operaciones"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_silver_rangos')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_dw_ffaa",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "rangos"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_silver_tipos_movimiento')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_dw_ffaa",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "tipos_movimiento"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_silver_tipos_operacion')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_dw_ffaa",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "tipos_operacion"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_silver_unidades')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_dw_ffaa",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "unidades"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_silver_zonas')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_dw_ffaa",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "zonas"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_oltp_to_silver_efectivos')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_oltp_efectivos",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_silver_efectivos",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          id_efectivo as integer,",
+						"          id_especialidad as integer,",
+						"          id_unidad_actual as integer,",
+						"          id_rango_actual as integer,",
+						"          nombre as string,",
+						"          ci as string,",
+						"          fecha_nacimiento as string,",
+						"          genero as string,",
+						"          departamento_origen as string,",
+						"          fecha_ingreso as string,",
+						"          estado as string,",
+						"          salario_mensual as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 derive(nombre = trim(regexReplace(upper(nombre), '[#\\\\\\\\t]', ' ')),",
+						"          genero = case(     upper(trim(genero)) == 'M' || upper(trim(genero)) == 'MASCULINO' || upper(trim(genero)) == 'HOMBRE' || upper(trim(genero)) == 'MASC.', 'M',     upper(trim(genero)) == 'F' || upper(trim(genero)) == 'FEMENINO' || upper(trim(genero)) == 'FEM', 'F',     'N/A' ),",
+						"          estado = case(     upper(trim(estado)) == 'ACTIVO' || upper(trim(estado)) == 'ACTIVO.' || upper(trim(estado)) == 'ACT' || upper(trim(estado)) == 'ACTV' || upper(trim(estado)) == 'A' || upper(trim(estado)) == 'EN ACTIVIDAD', 'ACTIVO',     upper(trim(estado)) == 'BAJA' || upper(trim(estado)) == 'DADO DE BAJA', 'BAJA',     upper(trim(estado)) == 'R' || upper(trim(estado)) == 'RSV' || upper(trim(estado)) == 'RESERVA', 'RESERVA',     'DESCONOCIDO' ),",
+						"          salario_mensual = iifNull(toDecimal(regexReplace(regexReplace(salario_mensual, '[^0-9.]', ''), ',', ''), 12, 2), 0),",
+						"          departamento_origen = case(\r",
+						"    upper(trim(departamento_origen)) == 'LA PAZ' || upper(trim(departamento_origen)) == 'L.P.' || upper(trim(departamento_origen)) == 'LP', 'LA PAZ',\r",
+						"    upper(trim(departamento_origen)) == 'COCHABAMBA' || upper(trim(departamento_origen)) == 'CBBA' || upper(trim(departamento_origen)) == 'CBBA.', 'COCHABAMBA',\r",
+						"    upper(trim(departamento_origen)) == 'SANTA CRUZ' || upper(trim(departamento_origen)) == 'SCZ', 'SANTA CRUZ',\r",
+						"    upper(trim(departamento_origen)) == 'ORURO' || upper(trim(departamento_origen)) == 'OR', 'ORURO',\r",
+						"    upper(trim(departamento_origen)) == 'TARIJA' || upper(trim(departamento_origen)) == 'TJ', 'TARIJA',\r",
+						"    upper(trim(departamento_origen)) == 'POTOSI' || upper(trim(departamento_origen)) == 'PT', 'POTOSI',\r",
+						"    upper(trim(departamento_origen)) == 'BENI' || upper(trim(departamento_origen)) == 'BE', 'BENI',\r",
+						"    upper(trim(departamento_origen)) == 'PANDO' || upper(trim(departamento_origen)) == 'PD', 'PANDO',\r",
+						"    upper(trim(departamento_origen)) == 'CHUQUISACA' || upper(trim(departamento_origen)) == 'CH', 'CHUQUISACA',\r",
+						"    upper(trim(departamento_origen))\r",
+						"),",
+						"          ci = case(\r",
+						"    upper(trim(ci)) == 'SIN DATO' || upper(trim(ci)) == 'N/D', 'N/A',\r",
+						"    trim(regexReplace(regexReplace(regexReplace(regexReplace(upper(ci), 'C[.]?I[.]?\\\\s*', ''), '[:\\\\s]*([A-Z]{2,3}[.]?)$', ''), '[.\\\\-\\\\s:]', ''), '^[:\\\\s]+', ''))\r",
+						")) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_silver_efectivos')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_oltp_to_silver_especialidades')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_oltp_especialidades",
+								"type": "DatasetReference"
+							},
+							"name": "sourceespecialidades"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_silver_especialidades",
+								"type": "DatasetReference"
+							},
+							"name": "sink"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> sourceespecialidades",
+						"sourceespecialidades sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_silver_especialidades')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_oltp_to_silver_estructura_org')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_oltp_estructura_org",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_silver_estructura_org",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          id_estructura as integer,",
+						"          id_padre as integer,",
+						"          nivel as string,",
+						"          nombre as string,",
+						"          sigla as string,",
+						"          tipo as string,",
+						"          cobertura_departamentos as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 derive(sigla = iifNull(sigla, 'N/A'),",
+						"          tipo = iifNull(tipo, 'N/A'),",
+						"          cobertura_departamentos = iifNull(cobertura_departamentos, 'Nacional')) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_silver_estructura_org')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_oltp_to_silver_movimientos')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_oltp_movimientos_personal",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_silver_movimientos_personal",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          id_movimiento as integer,",
+						"          id_efectivo as integer,",
+						"          id_unidad_destino as integer,",
+						"          id_rango as integer,",
+						"          id_tipo as integer,",
+						"          fecha_movimiento as string,",
+						"          antiguedad_anios as string,",
+						"          salario_mensual as string,",
+						"          observaciones as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 derive(antiguedad_anios = case(\r",
+						"    lower(trim(antiguedad_anios)) == 'cero' || lower(trim(antiguedad_anios)) == 'cero años' || trim(antiguedad_anios) == '0 a.' || trim(antiguedad_anios) == '0,0 años' || trim(antiguedad_anios) == '0 años' || trim(antiguedad_anios) == 'aprox. 0', 0,\r",
+						"    lower(trim(antiguedad_anios)) == 'uno' || lower(trim(antiguedad_anios)) == '1 año', 1,\r",
+						"    lower(trim(antiguedad_anios)) == 'dos' || lower(trim(antiguedad_anios)) == 'dos años', 2,\r",
+						"    lower(trim(antiguedad_anios)) == 'tres' || lower(trim(antiguedad_anios)) == 'tres años', 3,\r",
+						"    lower(trim(antiguedad_anios)) == 'cuatro' || lower(trim(antiguedad_anios)) == 'cuatro años', 4,\r",
+						"    lower(trim(antiguedad_anios)) == 'cinco' || lower(trim(antiguedad_anios)) == 'cinco años', 5,\r",
+						"    lower(trim(antiguedad_anios)) == 'seis' || lower(trim(antiguedad_anios)) == 'seis años', 6,\r",
+						"    lower(trim(antiguedad_anios)) == 'siete' || lower(trim(antiguedad_anios)) == 'siete años', 7,\r",
+						"    lower(trim(antiguedad_anios)) == 'ocho' || lower(trim(antiguedad_anios)) == 'ocho años', 8,\r",
+						"    lower(trim(antiguedad_anios)) == 'nueve' || lower(trim(antiguedad_anios)) == 'nueve años', 9,\r",
+						"    lower(trim(antiguedad_anios)) == 'diez' || lower(trim(antiguedad_anios)) == 'diez años', 10,\r",
+						"    lower(trim(antiguedad_anios)) == 'once' || lower(trim(antiguedad_anios)) == 'once años', 11,\r",
+						"    lower(trim(antiguedad_anios)) == 'doce' || lower(trim(antiguedad_anios)) == 'doce años', 12,\r",
+						"    lower(trim(antiguedad_anios)) == 'trece' || lower(trim(antiguedad_anios)) == 'trece años', 13,\r",
+						"    lower(trim(antiguedad_anios)) == 'catorce' || lower(trim(antiguedad_anios)) == 'catorce años', 14,\r",
+						"    lower(trim(antiguedad_anios)) == 'quince' || lower(trim(antiguedad_anios)) == 'quince años', 15,\r",
+						"    lower(trim(antiguedad_anios)) == 'dieciséis' || lower(trim(antiguedad_anios)) == 'dieciséis años', 16,\r",
+						"    lower(trim(antiguedad_anios)) == 'diecisiete' || lower(trim(antiguedad_anios)) == 'diecisiete años', 17,\r",
+						"    lower(trim(antiguedad_anios)) == 'dieciocho' || lower(trim(antiguedad_anios)) == 'dieciocho años', 18,\r",
+						"    lower(trim(antiguedad_anios)) == 'diecinueve' || lower(trim(antiguedad_anios)) == 'diecinueve años', 19,\r",
+						"    lower(trim(antiguedad_anios)) == 'veinte' || lower(trim(antiguedad_anios)) == 'veinte años', 20,\r",
+						"    lower(trim(antiguedad_anios)) == 'veintiuno' || lower(trim(antiguedad_anios)) == 'veintiuno años', 21,\r",
+						"    lower(trim(antiguedad_anios)) == 'veintidós' || lower(trim(antiguedad_anios)) == 'veintidós años', 22,\r",
+						"    lower(trim(antiguedad_anios)) == 'veintitrés' || lower(trim(antiguedad_anios)) == 'veintitrés años', 23,\r",
+						"    lower(trim(antiguedad_anios)) == 'veinticuatro' || lower(trim(antiguedad_anios)) == 'veinticuatro años', 24,\r",
+						"    lower(trim(antiguedad_anios)) == 'veinticinco' || lower(trim(antiguedad_anios)) == 'veinticinco años', 25,\r",
+						"    iifNull(toInteger(regexReplace(antiguedad_anios, '[^0-9]', '')), 0)\r",
+						"),",
+						"          salario_mensual = iifNull(toDecimal(regexReplace(regexReplace(salario_mensual, '[^0-9.]', ''), ',', ''), 12, 2), 0),",
+						"          observaciones = case(     isNull(trim(observaciones)) || length(trim(observaciones)) == 0 || upper(trim(observaciones)) == 'N/A' || upper(trim(observaciones)) == 'S/N' || upper(trim(observaciones)) == 'SIN OBS.', 'Sin observaciones',     initCap(trim(regexReplace(regexReplace(regexReplace(observaciones, '[\\r\\n]+', ' '), 'Ref: ', ''), ' — ', ' - '))) )) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_silver_movimientos_personal')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_oltp_to_silver_operaciones')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_oltp_operaciones",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_silver_operaciones",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          id_operacion as integer,",
+						"          id_tipo as integer,",
+						"          id_unidad_resp as integer,",
+						"          id_zona as integer,",
+						"          nombre_operacion as string,",
+						"          fecha_inicio as string,",
+						"          fecha_fin as string,",
+						"          efectivos_desplegados as string,",
+						"          vehiculos_utilizados as string,",
+						"          duracion_dias as string,",
+						"          costo_operacion as string,",
+						"          resultado as string,",
+						"          detenidos as string,",
+						"          area_km2 as string,",
+						"          incidentes as string,",
+						"          observaciones as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 derive(efectivos_desplegados = case(\r",
+						"    lower(trim(efectivos_desplegados)) == 'cien' || lower(trim(efectivos_desplegados)) == 'ciento', 100,\r",
+						"    lower(trim(efectivos_desplegados)) == 'doscientos', 200,\r",
+						"    lower(trim(efectivos_desplegados)) == 'trescientos', 300,\r",
+						"    lower(trim(efectivos_desplegados)) == 'cuatrocientos', 400,\r",
+						"    lower(trim(efectivos_desplegados)) == 'quinientos', 500,\r",
+						"    lower(trim(efectivos_desplegados)) == 'cincuenta', 50,\r",
+						"    iifNull(toInteger(regexReplace(efectivos_desplegados, '[^0-9]', '')), 0)\r",
+						"),",
+						"          vehiculos_utilizados = case(\r",
+						"    lower(trim(vehiculos_utilizados)) == 'dieciséis', 16,\r",
+						"    lower(trim(vehiculos_utilizados)) == 'veinte', 20,\r",
+						"    lower(trim(vehiculos_utilizados)) == 'veinticinco', 25,\r",
+						"    iifNull(toInteger(regexReplace(vehiculos_utilizados, '[^0-9]', '')), 0)\r",
+						"),",
+						"          duracion_dias = case(     lower(trim(duracion_dias)) == 'siete', 7,     lower(trim(duracion_dias)) == 'ocho', 8,     lower(trim(duracion_dias)) == 'trece', 13,     lower(trim(duracion_dias)) == 'dieciocho', 18,     lower(trim(duracion_dias)) == 'veinte', 20,     lower(trim(duracion_dias)) == 'veinticinco', 25,     lower(trim(duracion_dias)) == 'cinco', 5,     iifNull(toInteger(regexReplace(duracion_dias, '[^0-9]', '')), 0) ),",
+						"          costo_operacion = iifNull(toDecimal(regexReplace(regexReplace(regexReplace(costo_operacion, '[^0-9.,]', ''), ',', ''), '\\\\.(?=[0-9]{3})', ''), 15, 2), 0),",
+						"          detenidos = case(\r",
+						"    lower(trim(detenidos)) == 'ninguno' || lower(trim(detenidos)) == 'sin detenidos' || lower(trim(detenidos)) == 'cero' || lower(trim(detenidos)) == 'n/a' || trim(detenidos) == '-', 0,\r",
+						"    lower(trim(detenidos)) == 'uno', 1,\r",
+						"    lower(trim(detenidos)) == 'dos', 2,\r",
+						"    lower(trim(detenidos)) == 'tres', 3,\r",
+						"    lower(trim(detenidos)) == 'diez', 10,\r",
+						"    lower(trim(detenidos)) == 'veinte', 20,\r",
+						"    lower(trim(detenidos)) == 'veinticuatro', 24,\r",
+						"    iifNull(toInteger(regexReplace(detenidos, '[^0-9]', '')), 0)\r",
+						"),",
+						"          incidentes = case(     lower(trim(incidentes)) == 'ninguno' || lower(trim(incidentes)) == 'sin incidentes' || lower(trim(incidentes)) == 'cero' || lower(trim(incidentes)) == 'n/a' || trim(incidentes) == '-' || lower(trim(incidentes)) == '0 incidentes', 0,     lower(trim(incidentes)) == 'uno', 1,     lower(trim(incidentes)) == 'dos', 2,     lower(trim(incidentes)) == 'tres', 3,     lower(trim(incidentes)) == 'cinco', 5,     lower(trim(incidentes)) == 'ocho', 8,     lower(trim(incidentes)) == 'diez', 10,     iifNull(toInteger(regexReplace(incidentes, '[^0-9]', '')), 0) ),",
+						"          resultado = case(     lower(trim(resultado)) == 'exitosa' || lower(trim(resultado)) == 'exitoso' || lower(trim(resultado)) == 'favorable' || lower(trim(resultado)) == 'bueno' || lower(trim(resultado)) == 'objetivo cumplido' || lower(trim(resultado)) == 'completada' || lower(trim(resultado)) == 'logrado' || lower(trim(resultado)) == 'concluida' || lower(trim(resultado)) == 'finalizada' || lower(trim(resultado)) == 'sí, exitosa', 'EXITOSA',     lower(trim(resultado)) == 'fallida' || lower(trim(resultado)) == 'no logrado' || lower(trim(resultado)) == 'sin resultados' || lower(trim(resultado)) == 'sin resultados concretos' || lower(trim(resultado)) == 'negativo', 'FALLIDA',     lower(trim(resultado)) == 'parcial' || lower(trim(resultado)) == 'parcialmente exitoso' || lower(trim(resultado)) == 'parcialmente logrado' || lower(trim(resultado)) == 'aceptable' || lower(trim(resultado)) == 'satisfactorio' || lower(trim(resultado)) == 'regular', 'PARCIAL',     lower(trim(resultado)) == 'en proceso' || lower(trim(resultado)) == 'en curso' || lower(trim(resultado)) == 'por evaluar' || lower(trim(resultado)) == 'incompleta', 'EN PROCESO',     lower(trim(resultado)) == 's/n' || lower(trim(resultado)) == 'sin dato' || lower(trim(resultado)) == 'no reportado' || isNull(trim(resultado)) || trim(resultado) == '' || trim(resultado) == '-', 'SIN DATO',     upper(trim(resultado)) ),",
+						"          nombre_operacion = initCap(\r",
+						"    trim(\r",
+						"        regexReplace(\r",
+						"            replace(\r",
+						"                replace(\r",
+						"                    replace(\r",
+						"                        replace(\r",
+						"                            replace(\r",
+						"                                replace(\r",
+						"                                    replace(\r",
+						"                                        toString(byName('nombre_operacion')),\r",
+						"                                        'Operación',\r",
+						"                                        ''\r",
+						"                                    ),\r",
+						"                                    'Op.',\r",
+						"                                    ''\r",
+						"                                ),\r",
+						"                                'Op',\r",
+						"                                ''\r",
+						"                            ),\r",
+						"                            '#',\r",
+						"                            ''\r",
+						"                        ),\r",
+						"                        '\"',\r",
+						"                        ''\r",
+						"                    ),\r",
+						"                    '/',\r",
+						"                    ' '\r",
+						"                ),\r",
+						"                '-',\r",
+						"                ' '\r",
+						"            ),\r",
+						"            '\\u0027',\r",
+						"            ''\r",
+						"        )\r",
+						"    )\r",
+						"),",
+						"          area_km2 = iifNull(toDecimal(regexReplace(regexReplace(lower(area_km2), 'km[2]?', ''), '[^0-9.]', ''), 12, 2), 0),",
+						"          observaciones = case(     isNull(trim(observaciones)) || length(trim(observaciones)) == 0 || upper(trim(observaciones)) == 'N/A' || upper(trim(observaciones)) == 'S/N', 'Sin observaciones',     initCap(trim(regexReplace(regexReplace(observaciones, '[\\r\\n]+', ' '), ' — ', ' - '))) ),",
+						"          fecha_inicio = trim(fecha_inicio),",
+						"          fecha_fin = trim(fecha_fin)) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_silver_operaciones')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_oltp_to_silver_rangos')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_oltp_rangos",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_silver_rangos",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_silver_rangos')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_oltp_to_silver_tipos_movimientos')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_oltp_tipos_movimiento",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_silver_tipos_movimiento",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          id_tipo as integer,",
+						"          nombre as string,",
+						"          descripcion as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_silver_tipos_movimiento')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_oltp_to_silver_tipos_operacion')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_oltp_tipos_operacion",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_silver_tipos_operacion",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_silver_tipos_operacion')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_oltp_to_silver_zonas')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_oltp_zonas",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_silver_zonas",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          id_zona as integer,",
+						"          nombre as string,",
+						"          departamento as string,",
+						"          frontera_con as string,",
+						"          tipo_terreno as string,",
+						"          altitud_msnm as integer,",
+						"          nivel_riesgo as string,",
+						"          acceso_carretero as boolean",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 derive(frontera_con = iifNull(frontera_con, 'Sin frontera')) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_oltp_zonas')]",
+				"[concat(variables('factoryId'), '/datasets/ds_silver_zonas')]"
+			]
+		}
+	]
+}

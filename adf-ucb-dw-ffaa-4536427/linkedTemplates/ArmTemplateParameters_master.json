@@ -12,13 +12,13 @@
 			"value": ""
 		},
 		"ls_oltp_ffaa_properties_typeProperties_server": {
-			"value": "server01-fuerzas-armadas-bolivia.database.windows.net"
+			"value": "server02-fuerzas-armadas-bolivia.database.windows.net"
 		},
 		"ls_oltp_ffaa_properties_typeProperties_database": {
-			"value": "erp-fuerzas-armadas-bolivia"
+			"value": "erp-fuerzas-armadas-bolivia-2"
 		},
 		"ls_oltp_ffaa_properties_typeProperties_userName": {
-			"value": "userpar2"
+			"value": "userSisGer"
 		},
 		"ls_sql_dw_ffaa_properties_typeProperties_server": {
 			"value": "sql-ucb-sisger-ffaa-4536427.database.windows.net"

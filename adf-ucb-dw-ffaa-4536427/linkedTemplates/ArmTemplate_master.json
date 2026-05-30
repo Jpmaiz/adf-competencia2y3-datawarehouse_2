@@ -17,15 +17,15 @@
 		},
 		"ls_oltp_ffaa_properties_typeProperties_server": {
 			"type": "string",
-			"defaultValue": "server01-fuerzas-armadas-bolivia.database.windows.net"
+			"defaultValue": "server02-fuerzas-armadas-bolivia.database.windows.net"
 		},
 		"ls_oltp_ffaa_properties_typeProperties_database": {
 			"type": "string",
-			"defaultValue": "erp-fuerzas-armadas-bolivia"
+			"defaultValue": "erp-fuerzas-armadas-bolivia-2"
 		},
 		"ls_oltp_ffaa_properties_typeProperties_userName": {
 			"type": "string",
-			"defaultValue": "userpar2"
+			"defaultValue": "userSisGer"
 		},
 		"ls_sql_dw_ffaa_properties_typeProperties_server": {
 			"type": "string",
@@ -93,6 +93,46 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "adf-ucb-dw-ffaa-4536427_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adf-ucb-dw-ffaa-4536427_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "adf-ucb-dw-ffaa-4536427_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adf-ucb-dw-ffaa-4536427_ArmTemplate_1')]"
+			]
 		}
 	]
 }

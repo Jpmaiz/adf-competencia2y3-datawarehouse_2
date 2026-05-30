@@ -1,0 +1,1129 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Nombre de instancia de Data Factory",
+			"defaultValue": "adf-ucb-dw-ffaa-4536427"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/df_otlp_to_silver_unidades')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_oltp_unidades",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_silver_unidades",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_silver_to_gold_dim_rango')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "gold"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_silver_rangos",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_gold_dim_rango",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_silver_to_gold_dim_tipo_movimiento')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "gold"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_silver_tipos_movimiento",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_gold_dim_tipo_movimiento",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_silver_to_gold_dim_tipo_operacion')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "gold"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_silver_tipos_operacion",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_gold_dim_tipo_operacion",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_silver_to_gold_dim_unidad')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "gold"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_silver_unidades",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_gold_dim_unidad",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_silver_to_gold_dim_zona_operacion')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "gold"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_silver_zonas",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_gold_dim_zona_operacion",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_silver_to_gold_dim_efectivo')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "gold"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_silver_efectivos",
+								"type": "DatasetReference"
+							},
+							"name": "sourceEfectivos"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_gold_dim_efectivo",
+								"type": "DatasetReference"
+							},
+							"name": "sinkDimEfectivo"
+						}
+					],
+					"transformations": [
+						{
+							"name": "columnasCalculadas"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          id_efectivo as integer,",
+						"          id_especialidad as integer,",
+						"          id_unidad_actual as integer,",
+						"          id_rango_actual as integer,",
+						"          nombre as string,",
+						"          ci as string,",
+						"          fecha_nacimiento as string,",
+						"          genero as string,",
+						"          departamento_origen as string,",
+						"          fecha_ingreso as string,",
+						"          estado as string,",
+						"          salario_mensual as decimal(12,2)",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> sourceEfectivos",
+						"sourceEfectivos derive(anio_nacimiento = iif(toInteger(left(fecha_nacimiento, 4)) >= 1900, \r",
+						"    toInteger(left(fecha_nacimiento, 4)), \r",
+						"    toInteger(right(fecha_nacimiento, 4))),",
+						"          grupo_edad = case(\r",
+						"    2026 - iif(toInteger(left(fecha_nacimiento, 4)) >= 1900, toInteger(left(fecha_nacimiento, 4)), toInteger(right(fecha_nacimiento, 4))) < 20, 'Menor 20 años',\r",
+						"    2026 - iif(toInteger(left(fecha_nacimiento, 4)) >= 1900, toInteger(left(fecha_nacimiento, 4)), toInteger(right(fecha_nacimiento, 4))) <= 30, '20-30 años',\r",
+						"    2026 - iif(toInteger(left(fecha_nacimiento, 4)) >= 1900, toInteger(left(fecha_nacimiento, 4)), toInteger(right(fecha_nacimiento, 4))) <= 40, '31-40 años',\r",
+						"    2026 - iif(toInteger(left(fecha_nacimiento, 4)) >= 1900, toInteger(left(fecha_nacimiento, 4)), toInteger(right(fecha_nacimiento, 4))) <= 50, '41-50 años',\r",
+						"    'Mayor 50 años'\r",
+						"),",
+						"          anios_servicio = 2026 - iif(toInteger(left(fecha_ingreso, 4)) >= 1900, toInteger(left(fecha_ingreso, 4)), toInteger(right(fecha_ingreso, 4))),",
+						"          fecha_nacimiento = iif(\r",
+						"    instr(fecha_nacimiento, '/') == 0 && instr(fecha_nacimiento, '-') == 0,\r",
+						"    toDate(fecha_nacimiento, 'yyyyMMdd'),\r",
+						"    iif(\r",
+						"        toInteger(left(fecha_nacimiento, 4)) >= 1900,\r",
+						"        toDate(fecha_nacimiento, 'yyyy/MM/dd'),\r",
+						"        iif(\r",
+						"            instr(fecha_nacimiento, '/') > 0,\r",
+						"            toDate(fecha_nacimiento, 'dd/MM/yyyy'),\r",
+						"            iif(\r",
+						"                toInteger(left(fecha_nacimiento, 2)) > 12,\r",
+						"                toDate(fecha_nacimiento, 'dd-MM-yyyy'),\r",
+						"                iif(\r",
+						"                    toInteger(substring(fecha_nacimiento, 4, 2)) > 12,\r",
+						"                    toDate(fecha_nacimiento, 'MM-dd-yyyy'),\r",
+						"                    toDate(fecha_nacimiento, 'dd-MM-yyyy')\r",
+						"                )\r",
+						"            )\r",
+						"        )\r",
+						"    )\r",
+						"),",
+						"          fecha_ingreso = iif(\r",
+						"    instr(fecha_ingreso, '/') == 0 && instr(fecha_ingreso, '-') == 0,\r",
+						"    toDate(fecha_ingreso, 'yyyyMMdd'),\r",
+						"    iif(\r",
+						"        toInteger(left(fecha_ingreso, 4)) >= 1900,\r",
+						"        toDate(fecha_ingreso, 'yyyy/MM/dd'),\r",
+						"        iif(\r",
+						"            instr(fecha_ingreso, '/') > 0,\r",
+						"            toDate(fecha_ingreso, 'dd/MM/yyyy'),\r",
+						"            iif(\r",
+						"                toInteger(left(fecha_ingreso, 2)) > 12,\r",
+						"                toDate(fecha_ingreso, 'dd-MM-yyyy'),\r",
+						"                iif(\r",
+						"                    toInteger(substring(fecha_ingreso, 4, 2)) > 12,\r",
+						"                    toDate(fecha_ingreso, 'MM-dd-yyyy'),\r",
+						"                    toDate(fecha_ingreso, 'dd-MM-yyyy')\r",
+						"                )\r",
+						"            )\r",
+						"        )\r",
+						"    )\r",
+						")) ~> columnasCalculadas",
+						"columnasCalculadas sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sinkDimEfectivo"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_oltp_to_silver_catalogos')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_oltp_to_silver_especialidades",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sourceespecialidades": {},
+									"sink": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Data flow2",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Data flow1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_oltp_to_silver_rangos",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Data flow3",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Data flow2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_otlp_to_silver_unidades",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Data flow4",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Data flow3",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_oltp_to_silver_tipos_movimientos",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Data flow5",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Data flow4",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_oltp_to_silver_tipos_operacion",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Data flow6",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Data flow5",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_oltp_to_silver_zonas",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Data flow7",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Data flow6",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_oltp_to_silver_estructura_org",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_otlp_to_silver_unidades')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_oltp_to_silver_transaccional')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_oltp_to_silver_efectivos",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Data flow2",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Data flow1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_oltp_to_silver_movimientos",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Data flow3",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Data flow2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_oltp_to_silver_operaciones",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_silver_to_gold')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "dim_rango",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_silver_to_gold_dim_rango",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "dim_tipo_movimiento",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_silver_to_gold_dim_tipo_movimiento",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "dim_tipo_operacion",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_silver_to_gold_dim_tipo_operacion",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "dim_unidad",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_silver_to_gold_dim_unidad",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "dim_zona_operacion",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_silver_to_gold_dim_zona_operacion",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "dim_efectivo",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_silver_to_gold_dim_efectivo",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sourceEfectivos": {},
+									"sinkDimEfectivo": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "hechos_movimiento",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "dim_rango",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "dim_unidad",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "dim_tipo_movimiento",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "dim_zona_operacion",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "dim_tipo_operacion",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "dim_efectivo",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "ls_sql_dw_ffaa",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "ALTER TABLE gold.hechos_movimiento_personal NOCHECK CONSTRAINT ALL;\nSET IDENTITY_INSERT gold.hechos_movimiento_personal ON;\nTRUNCATE TABLE gold.hechos_movimiento_personal;\nWITH fechas_parseadas AS (\n    SELECT id_movimiento, id_efectivo, id_unidad_destino, id_rango, id_tipo,\n        antiguedad_anios, salario_mensual, observaciones,\n        CASE \n            WHEN fecha_movimiento NOT LIKE '%/%' AND fecha_movimiento NOT LIKE '%-%' THEN TRY_CONVERT(DATE, fecha_movimiento, 112)\n            WHEN TRY_CONVERT(INT, LEFT(fecha_movimiento, 4)) >= 1900 AND fecha_movimiento LIKE '%/%' THEN TRY_CONVERT(DATE, fecha_movimiento, 111)\n            WHEN fecha_movimiento LIKE '%/%' THEN TRY_CONVERT(DATE, fecha_movimiento, 103)\n            WHEN TRY_CONVERT(INT, LEFT(fecha_movimiento, 2)) > 12 THEN TRY_CONVERT(DATE, fecha_movimiento, 105)\n            WHEN TRY_CONVERT(INT, SUBSTRING(fecha_movimiento, 4, 2)) > 12 THEN TRY_CONVERT(DATE, fecha_movimiento, 110)\n            ELSE TRY_CONVERT(DATE, fecha_movimiento, 105)\n        END AS fecha_parsed\n    FROM silver.movimientos_personal\n)\nINSERT INTO gold.hechos_movimiento_personal (id_movimiento, id_tiempo, id_efectivo, id_unidad_destino, id_rango, id_tipo_movimiento, antiguedad_anios, salario_mensual, observaciones)\nSELECT p.id_movimiento, t.id_tiempo, p.id_efectivo, p.id_unidad_destino, p.id_rango, p.id_tipo, p.antiguedad_anios, p.salario_mensual, p.observaciones\nFROM fechas_parseadas p INNER JOIN gold.dim_tiempo t ON t.fecha = p.fecha_parsed;\nSET IDENTITY_INSERT gold.hechos_movimiento_personal OFF;\nALTER TABLE gold.hechos_movimiento_personal CHECK CONSTRAINT ALL;"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "hechos_operacion",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "hechos_movimiento",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "ls_sql_dw_ffaa",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "ALTER TABLE gold.hechos_operacion NOCHECK CONSTRAINT ALL;\nSET IDENTITY_INSERT gold.hechos_operacion ON;\nTRUNCATE TABLE gold.hechos_operacion;\nWITH fechas_parseadas AS (\n    SELECT id_operacion, id_tipo, id_unidad_resp, id_zona, nombre_operacion,\n        efectivos_desplegados, vehiculos_utilizados, duracion_dias, costo_operacion,\n        resultado, detenidos, area_km2, incidentes,\n        CASE \n            WHEN fecha_inicio NOT LIKE '%/%' AND fecha_inicio NOT LIKE '%-%' THEN TRY_CONVERT(DATE, fecha_inicio, 112)\n            WHEN TRY_CONVERT(INT, LEFT(fecha_inicio, 4)) >= 1900 AND fecha_inicio LIKE '%/%' THEN TRY_CONVERT(DATE, fecha_inicio, 111)\n            WHEN fecha_inicio LIKE '%/%' THEN TRY_CONVERT(DATE, fecha_inicio, 103)\n            WHEN TRY_CONVERT(INT, LEFT(fecha_inicio, 2)) > 12 THEN TRY_CONVERT(DATE, fecha_inicio, 105)\n            WHEN TRY_CONVERT(INT, SUBSTRING(fecha_inicio, 4, 2)) > 12 THEN TRY_CONVERT(DATE, fecha_inicio, 110)\n            ELSE TRY_CONVERT(DATE, fecha_inicio, 105)\n        END AS fecha_inicio_parsed,\n        CASE \n            WHEN fecha_fin NOT LIKE '%/%' AND fecha_fin NOT LIKE '%-%' THEN TRY_CONVERT(DATE, fecha_fin, 112)\n            WHEN TRY_CONVERT(INT, LEFT(fecha_fin, 4)) >= 1900 AND fecha_fin LIKE '%/%' THEN TRY_CONVERT(DATE, fecha_fin, 111)\n            WHEN fecha_fin LIKE '%/%' THEN TRY_CONVERT(DATE, fecha_fin, 103)\n            WHEN TRY_CONVERT(INT, LEFT(fecha_fin, 2)) > 12 THEN TRY_CONVERT(DATE, fecha_fin, 105)\n            WHEN TRY_CONVERT(INT, SUBSTRING(fecha_fin, 4, 2)) > 12 THEN TRY_CONVERT(DATE, fecha_fin, 110)\n            ELSE TRY_CONVERT(DATE, fecha_fin, 105)\n        END AS fecha_fin_parsed,\n        ROW_NUMBER() OVER (PARTITION BY id_operacion ORDER BY id_operacion) AS rn\n    FROM silver.operaciones\n),\nsin_duplicados AS (SELECT * FROM fechas_parseadas WHERE rn = 1)\nINSERT INTO gold.hechos_operacion (id_hecho, id_tiempo_inicio, id_tiempo_fin, id_unidad_resp, id_tipo_operacion, id_zona, nombre_operacion, efectivos_desplegados, vehiculos_utilizados, duracion_dias, costo_operacion, resultado, detenidos, area_km2, incidentes)\nSELECT p.id_operacion, ti.id_tiempo, tf.id_tiempo, p.id_unidad_resp, p.id_tipo, p.id_zona, p.nombre_operacion, p.efectivos_desplegados, p.vehiculos_utilizados, p.duracion_dias, p.costo_operacion, p.resultado, p.detenidos, p.area_km2, p.incidentes\nFROM sin_duplicados p\nINNER JOIN gold.dim_tiempo ti ON ti.fecha = p.fecha_inicio_parsed\nINNER JOIN gold.dim_tiempo tf ON tf.fecha = p.fecha_fin_parsed;\nSET IDENTITY_INSERT gold.hechos_operacion OFF;\nALTER TABLE gold.hechos_operacion CHECK CONSTRAINT ALL;"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "gold"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_silver_to_gold_dim_rango')]",
+				"[concat(variables('factoryId'), '/dataflows/df_silver_to_gold_dim_tipo_movimiento')]",
+				"[concat(variables('factoryId'), '/dataflows/df_silver_to_gold_dim_tipo_operacion')]",
+				"[concat(variables('factoryId'), '/dataflows/df_silver_to_gold_dim_unidad')]",
+				"[concat(variables('factoryId'), '/dataflows/df_silver_to_gold_dim_zona_operacion')]",
+				"[concat(variables('factoryId'), '/dataflows/df_silver_to_gold_dim_efectivo')]"
+			]
+		}
+	]
+}
